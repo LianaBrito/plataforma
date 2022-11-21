@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityTemplateProjects;
 
 /// <summary>
 /// Estados do Game Manager
@@ -22,6 +23,8 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // instancia do singleton
+
+    public GameMode gameMode;
 
     public GameState GameState
     {
@@ -51,11 +54,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         PlayerObserverManager.OnCoinsChanged += PlayerCoinsUpdate;
+        gameMode.OnGameModeStateChanged += HandleGameMode;
     }
 
     private void OnDisable()
     {
         PlayerObserverManager.OnCoinsChanged -= PlayerCoinsUpdate;
+        gameMode.OnGameModeStateChanged -= HandleGameMode;
     }
 
     private void Awake()
@@ -165,7 +170,8 @@ public class GameManager : MonoBehaviour
     
     private void PlayerCoinsUpdate(int obj)
     {
-        if (obj >= coinsToWin) GameState = GameState.Victory;
+        //if (obj >= coinsToWin) GameState = GameState.Victory;
+        gameMode.UpdateGameMode(obj);
     }
 
     private void OnGameStateChanged()
@@ -230,5 +236,10 @@ public class GameManager : MonoBehaviour
     private void LoadGameOverScene()
     {
         SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
+    }
+    
+    private void HandleGameMode(GameState obj)
+    {
+        GameState = obj;
     }
 }
