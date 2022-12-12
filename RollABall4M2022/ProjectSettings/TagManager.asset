@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Coin
   - Victory
+  - Spike
   layers:
   - Default
   - TransparentFX
